@@ -1,0 +1,26 @@
+body{
+   background-image: url(/Clock/assets/ideogram-v3.0_🌐_The_AI_Infrastructure_Boom_Is_Here_Big_infrastructure_deals_are_underway_to_support_the_explosive-0.jpg);
+   background-position: center;
+   background-repeat: no-repeat;
+   background-size: cover;
+   background-attachment: fixed;
+   margin: 0;
+}
+
+#clock-container{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 100vh;
+}
+
+#clock{
+   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+   font-size: 6.5rem;
+   font-weight: bold;
+   text-align: center;
+   color: hsl(0, 29%, 3%);
+   backdrop-filter: blur(5px);
+   background-color: hsla(0, 0%, 100%,0.1);
+   width: 100%;
+}

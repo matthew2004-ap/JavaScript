@@ -1,0 +1,48 @@
+body{
+   background-color: grey;
+   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+   text-align: center;
+   background-image: url(/Clock/assets/boys\ hoodies3.jpg);
+}
+
+#myButton{
+   font-size: 3rem;
+   padding: 5px 30px;
+   background-color: rgb(254, 7, 7);
+   border-radius: 5px;
+   cursor: pointer;
+   transition: background-color 3s;
+}
+#myButton:hover{
+   background-color: rgb(222, 99, 99);
+}
+
+#myLabels{
+   font-size: 30rem;
+}
+
+#box{
+   background-color: gray;
+   border-radius: 10px;
+   padding: 5px 30px;
+   width: auto;
+}
+
+#label1{
+   font-size: 10em;
+   font-weight: bolder;
+   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif ;
+}
+
+
+#label2{
+   font-size: 10em;
+   font-weight: bolder;
+   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif ;
+}
+
+#label3{
+   font-size: 10em;
+   font-weight: bolder;
+   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif ;
+}

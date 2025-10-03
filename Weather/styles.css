@@ -1,0 +1,153 @@
+body {
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   min-height: 100vh;
+   margin: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+   background-size: cover;
+   position: relative;
+
+   body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+   }
+
+   body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: linear-gradient(270deg, rgba(194, 233, 251, 0.55) 0%, rgba(129, 164, 253, 0.45) 50%, rgba(255, 255, 255, 0.35) 100%);
+      background-size: 400% 400%;
+      animation: animatedGradient 18s ease-in-out infinite;
+   }
+
+   @keyframes animatedGradient {
+      0% {
+         background-position: 0% 50%;
+      }
+
+      50% {
+         background-position: 100% 50%;
+      }
+
+      100% {
+         background-position: 0% 50%;
+      }
+   }
+
+   min-width: 340px;
+   z-index: 1;
+   position: relative;
+   backdrop-filter: blur(2px);
+}
+
+h1 {
+   margin-bottom: 1.5rem;
+   color: #2d3a4b;
+}
+
+form {
+   margin-bottom: 1.2rem;
+}
+
+input[type="text"] {
+   font-size: 1.1rem;
+   padding: 0.4rem 0.7rem;
+   border-radius: 6px;
+   border: 1px solid #ccc;
+   margin-right: 0.5rem;
+   width: 200px;
+}
+
+button {
+   font-size: 1.1rem;
+   padding: 0.4rem 1.1rem;
+   border-radius: 6px;
+   border: none;
+   background: #81a4fd;
+   color: #fff;
+   cursor: pointer;
+   margin-right: 0.3rem;
+   transition: background 0.2s;
+}
+
+button:hover {
+   background: #2d3a4b;
+}
+
+#errorDisplay {
+   color: #e74c3c;
+   font-weight: bold;
+   min-height: 1.2em;
+   margin-bottom: 0.7em;
+}
+
+#forecastCard {
+   background: linear-gradient(120deg, #f3f8ff 80%, #e0e7ff 100%);
+   border-radius: 16px;
+   padding: 1.2em 1em;
+   margin-top: 1em;
+   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+   border: 1.5px solid #e0e7ff;
+}
+
+#forecastDisplay {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   gap: 1em;
+}
+
+.day-forecast {
+   background: #fff;
+   border-radius: 10px;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+   padding: 0.9em 1.2em;
+   min-width: 120px;
+   text-align: center;
+   margin-bottom: 0.5em;
+   transition: transform 0.15s;
+}
+
+.day-forecast:hover {
+   transform: translateY(-4px) scale(1.04);
+   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.13);
+}
+
+.unit-toggle {
+   font-size: 0.95em;
+   color: #2d3a4b;
+   margin-left: 1em;
+   user-select: none;
+}
+
+.day-forecast h3 {
+   margin: 0.2em 0 0.5em 0;
+   font-size: 1.1em;
+   color: #2d3a4b;
+}
+
+.day-forecast .temp {
+   font-size: 1.3em;
+   font-weight: bold;
+   color: #81a4fd;
+}
+
+.day-forecast .desc {
+   font-size: 0.95em;
+   color: #555;
+}

@@ -1,0 +1,65 @@
+body {
+   font-family: Arial, sans-serif;
+   background: #f4f4f4;
+   background-image: url(/ClockCalendar/Apple-WWDC24-iOS-18-Home-Screen-dark-effect-240610_inline.jpg.large.jpg);
+   background-position: center;
+   background-repeat: no-repeat;
+   background-size: cover;
+   background-attachment: fixed;
+   margin: 0;
+}
+
+.container {
+   background: #fff;
+   padding: 2.5em;
+   margin: 3em auto;
+   width: 600px;
+   height: 600px;
+   /* Increased height */
+   border-radius: 8px;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+   text-align: center;
+}
+
+.clock {
+   font-size: 2em;
+   margin: 1em 0;
+   font-weight: bold;
+}
+
+.calendar {
+   margin-top: 2em;
+   display: inline-block;
+   text-align: left;
+}
+
+.calendar table {
+   border-collapse: collapse;
+   width: 100%;
+}
+
+.calendar th,
+.calendar td {
+   border: 1px solid #ccc;
+   padding: 0.5em;
+   width: 2em;
+   text-align: center;
+}
+
+.calendar th {
+   background: #f0f0f0;
+}
+
+.calendar .today {
+   background: #ffe082;
+   font-weight: bold;
+}
+
+.calendar-controls {
+   margin: 1em 0;
+}
+
+.calendar-controls label,
+.calendar-controls select {
+   margin-right: 0.5em;
+}

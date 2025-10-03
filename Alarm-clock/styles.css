@@ -1,0 +1,65 @@
+body {
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
+   min-height: 100vh;
+   margin: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.container {
+   background: #fff;
+   padding: 2rem 2.5rem;
+   border-radius: 16px;
+   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+   text-align: center;
+}
+
+h1 {
+   margin-bottom: 1.5rem;
+   color: #2d3a4b;
+}
+
+.clock-display {
+   font-size: 2.5rem;
+   font-weight: bold;
+   margin-bottom: 1.5rem;
+   letter-spacing: 2px;
+   color: #43c6ac;
+}
+
+form {
+   margin-bottom: 1rem;
+}
+
+input[type="time"] {
+   font-size: 1.2rem;
+   padding: 0.3rem 0.7rem;
+   border-radius: 6px;
+   border: 1px solid #ccc;
+   margin-right: 0.5rem;
+}
+
+button {
+   font-size: 1.1rem;
+   padding: 0.3rem 1rem;
+   border-radius: 6px;
+   border: none;
+   background: #43c6ac;
+   color: #fff;
+   cursor: pointer;
+   margin-right: 0.3rem;
+   transition: background 0.2s;
+}
+
+button:hover {
+   background: #2d3a4b;
+}
+
+#alarmStatus {
+   margin-top: 1rem;
+   color: #e74c3c;
+   font-weight: bold;
+   min-height: 1.2em;
+}

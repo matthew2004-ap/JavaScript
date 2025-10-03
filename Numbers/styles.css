@@ -1,0 +1,40 @@
+  body{
+   margin: 0;
+   text-align: center;
+   background-color: black;
+   background-image: url(/Clock/assets/glasses.jpg);
+  }
+  
+  
+  #countLabel{
+   display: block;
+   text-align: center;
+   font-size: 10rem;
+   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+   color: rgb(0, 0, 255);
+}
+
+#buttonContainer{
+   text-align: center;
+   
+}
+
+.button{
+   padding: 10px  20px;
+   font-size: 1.5em;
+   color: rgb(240, 5, 5);
+   background-color:lightskyblue ;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: background-color 0.25s;
+}
+
+.button:hover{
+   background-color: rgb(40, 40, 199);
+}
+
+#container{
+   background-image: url(/Clock/assets/girl\ jackets.jpg);
+   text-align: center;
+   
+}

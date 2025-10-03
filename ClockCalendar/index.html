@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <title>Clock Converter & Calendar</title>
+   <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+   <div class="container">
+      <h1>Clock Converter & Calendar</h1>
+      <div>
+         <label for="timezone">Select Timezone:</label>
+         <select id="timezone">
+            <option value="UTC">UTC</option>
+            <option value="America/New_York">New York (EST)</option>
+            <option value="Europe/London">London (GMT)</option>
+            <option value="Europe/Paris">Paris (CET)</option>
+            <option value="Asia/Tokyo">Tokyo (JST)</option>
+            <option value="Asia/Kolkata">India (IST)</option>
+            <option value="Australia/Sydney">Sydney (AEST)</option>
+         </select>
+      </div>
+      <div id="clock" class="clock"></div>
+      <div class="calendar-controls">
+         <label for="monthSelect">Month:</label>
+         <select id="monthSelect"></select>
+         <label for="yearSelect">Year:</label>
+         <select id="yearSelect"></select>
+      </div>
+      <div id="calendar" class="calendar"></div>
+   </div>
+   <script src="index.js"></script>
+</body>
+
+</html>

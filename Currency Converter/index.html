@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Currency Converter</title>
+   <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+   <div class="container">
+      <h1>Currency Converter</h1>
+      <div class="converter">
+         <input type="number" id="amount" placeholder="Enter amount" />
+         <select id="fromCurrency">
+            <option value="USD">USD - US Dollar</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - British Pound</option>
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="NGN">NGN - Nigerian Naira</option>
+            <option value="CNY">CNY - Chinese Yuan</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+            <option value="ARS">ARS - Argentine Peso</option>
+         </select>
+         <span>to</span>
+         <select id="toCurrency">
+            <option value="USD">USD - US Dollar</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - British Pound</option>
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="NGN">NGN - Nigerian Naira</option>
+            <option value="CNY">CNY - Chinese Yuan</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+            <option value="ARS">ARS - Argentine Peso</option>
+         </select>
+         <button onclick="convertCurrency()">Convert</button>
+      </div>
+      <div id="currencyResult"></div>
+   </div>
+   <script src="index.js"></script>
+</body>
+
+</html>

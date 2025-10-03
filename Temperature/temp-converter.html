@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Temperature Converter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      background: #fff;
+      padding: 2.5rem 2rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+      max-width: 350px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      color: #f70909;
+      letter-spacing: 1px;
+    }
+
+    input[type="number"] {
+      width: 80%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border: 1px solid #bdbdbd;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input[type="number"]:focus {
+      border: 1.5px solid #74ebd5;
+    }
+
+    select {
+      width: 85%;
+      padding: 0.6rem;
+      margin-bottom: 1.2rem;
+      border-radius: 8px;
+      border: 1px solid #bdbdbd;
+      font-size: 1rem;
+      background: #f7f7f7;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    select:focus {
+      border: 1.5px solid #ACB6E5;
+    }
+
+    button {
+      background: linear-gradient(90deg, #74ebd5 0%, #ACB6E5 100%);
+      color: #fff;
+      border: none;
+      padding: 0.8rem 2.2rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(116, 235, 213, 0.15);
+      transition: background 0.2s, transform 0.2s;
+      margin-bottom: 1.2rem;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #ACB6E5 0%, #74ebd5 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    #result {
+      font-size: 1.2rem;
+      color: #2d6a4f;
+      margin-top: 1.2rem;
+      min-height: 1.5em;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 1.2rem 0.5rem;
+        max-width: 95vw;
+      }
+
+      input,
+      select,
+      button {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Temperature Converter</h2>
+    <input type="number" id="tempInput" placeholder="Enter temperature" />
+    <br>
+    <select id="unit">
+      <option value="CtoF">Celsius to Fahrenheit</option>
+      <option value="FtoC">Fahrenheit to Celsius</option>
+      <option value="CtoK">Celsius to Kelvin</option>
+      <option value="KtoC">Kelvin to Celsius</option>
+      <option value="FtoK">Fahrenheit to Kelvin</option>
+      <option value="KtoF">Kelvin to Fahrenheit</option>
+    </select>
+    <br>
+    <button onclick="convertTemp()">Convert</button>
+    <div id="result"></div>
+  </div>
+  <script>
+    function convertTemp() {
+      const temp = parseFloat(document.getElementById('tempInput').value);
+      const unit = document.getElementById('unit').value;
+      let result = '';
+
+      if (isNaN(temp)) {
+        result = 'Please enter a valid number.';
+      } else {
+        switch (unit) {
+          case 'CtoF':
+            result = `${temp}°C = ${(temp * 9 / 5 + 32).toFixed(2)}°F`;
+            break;
+          case 'FtoC':
+            result = `${temp}°F = ${((temp - 32) * 5 / 9).toFixed(2)}°C`;
+            break;
+          case 'CtoK':
+            result = `${temp}°C = ${(temp + 273.15).toFixed(2)}K`;
+            break;
+          case 'KtoC':
+            result = `${temp}K = ${(temp - 273.15).toFixed(2)}°C`;
+            break;
+          case 'FtoK':
+            result = `${temp}°F = ${(((temp - 32) * 5 / 9) + 273.15).toFixed(2)}K`;
+            break;
+          case 'KtoF':
+            result = `${temp}K = ${((temp - 273.15) * 9 / 5 + 32).toFixed(2)}°F`;
+            break;
+          default:
+            result = 'Invalid conversion.';
+        }
+      }
+      document.getElementById('result').textContent = result;
+    }
+  </script>
+</body>
+
+</html>
