@@ -17,7 +17,7 @@ const computerScoreDisplay = document.getElementById("computerScoreDisplay");
 let playerScore = 0;
 let computerScore = 0;
 
-let timeLeft = 300; // 3 minutes in seconds
+let timeLeft = 100; // 3 minutes in seconds
 let timerInterval = null;
 const timerDisplay = document.getElementById('timer');
 const trophyDisplay = document.getElementById('trophy');
