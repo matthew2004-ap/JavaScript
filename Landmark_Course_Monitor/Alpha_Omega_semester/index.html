@@ -21,95 +21,96 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
 
-            th,
-            td {
-                border: 1px solid #d1d5db;
-                /* gray-300 */
-                padding: 0.75rem;
-                /* p-3 */
-                text-align: left;
-                vertical-align: middle;
-            }
+        th,
+        td {
+            border: 1px solid #d1d5db;
+            /* gray-300 */
+            padding: 0.75rem;
+            /* p-3 */
+            text-align: left;
+            vertical-align: middle;
+        }
 
-            th {
-                background-color: #f9fafb;
-                /* gray-50 */
-                font-weight: 600;
-                /* font-semibold */
-                position: sticky;
-                top: 0;
-                z-index: 10;
-            }
+        th {
+            background-color: #f9fafb;
+            /* gray-50 */
+            font-weight: 600;
+            /* font-semibold */
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
 
-            input[type="number"] {
-                width: 100%;
-                max-width: 80px;
-                padding: 0.75rem;
-                border: 1px solid #e5e7eb;
-                border-radius: 0.5rem;
-                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-                appearance: textfield;
-                transition: all 0.2s ease-in-out;
-                font-size: 0.875rem;
-                font-weight: 500;
-            }
+        input[type="number"] {
+            width: 100%;
+            max-width: 80px;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            appearance: textfield;
+            transition: all 0.2s ease-in-out;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
 
-            input[type="number"]:focus {
-                outline: none;
-                border-color: #6366f1;
-                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-            }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
 
-            input[type="number"]::-webkit-outer-spin-button,
-            input[type="number"]::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
-            .grade-a {
-                background-color: #d1fae5;
-                color: #065f46;
-            }
+        .grade-a {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
 
-            /* green */
-            .grade-b {
-                background-color: #e0f2fe;
-                color: #075985;
-            }
+        /* green */
+        .grade-b {
+            background-color: #e0f2fe;
+            color: #075985;
+        }
 
-            /* light blue */
-            .grade-c {
-                background-color: #fef3c7;
-                color: #92400e;
-            }
+        /* light blue */
+        .grade-c {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
 
-            /* yellow */
-            .grade-d {
-                background-color: #fee2e2;
-                color: #991b1b;
-            }
+        /* yellow */
+        .grade-d {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
 
-            /* red */
-            .grade-e {
-                background-color: #fee2e2;
-                color: #991b1b;
-            }
+        /* red */
+        .grade-e {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
 
-            /* red */
-            .grade-f {
-                background-color: #fecaca;
-                color: #991b1b;
-                font-weight: bold;
-            }
+        /* red */
+        .grade-f {
+            background-color: #fecaca;
+            color: #991b1b;
+            font-weight: bold;
+        }
 
-            /* stronger red */
-            .gpa-box {
-                background-color: #f3f4f6;
-                /* gray-100 */
-                border-top: 3px solid #6366f1;
-                /* indigo-500 */
-            }
+        /* stronger red */
+        .gpa-box {
+            background-color: #f3f4f6;
+            /* gray-100 */
+            border-top: 3px solid #6366f1;
+            /* indigo-500 */
+        }
     </style>
 </head>
 
@@ -338,8 +339,6 @@
                 `;
                     tableBody.appendChild(row);
                 });
-
-            });
 
         // Add event listeners to all score inputs
         document.querySelectorAll('.score-input').forEach(input => {
