@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Performance Dashboard | CGPA Calculator</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6; /* A very light, soft gray */
+        }
+        /* Custom styles for number inputs (hide arrows) */
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Style for table headers */
+        th {
+            @apply px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider;
+        }
+        /* Style for table cells */
+        td {
+            @apply px-4 py-4 text-sm text-gray-800 whitespace-nowrap;
+        }
+        /* Style for input fields in table */
+        td input {
+            @apply w-16 p-2 text-center border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Academic Performance Dashboard</h1>
+            <p class="mt-1 text-lg text-gray-600">Track your progress and calculate your Sessional CGPA.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Left Column: Controls & Summary -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- Semester Selection Card -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Select Semester for Summary</h2>
+                    <select id="semester-select" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="omega" selected>Omega Semester (2nd)</option>
+                        <option value="alpha">Alpha Semester (1st)</option>
+                    </select>
+                    <button class="w-full bg-indigo-600 text-white font-semibold py-3 px-4 rounded-lg mt-4 hover:bg-indigo-700 transition duration-200 flex items-center justify-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Export Results (Coming Soon)</span>
+                    </button>
+                </div>
+
+                <!-- Active Semester Summary Card (Dynamic) -->
+                <div class="bg-indigo-700 text-white p-6 rounded-xl shadow-lg">
+                    <div class="text-sm font-medium text-indigo-200 mb-2" id="semester-summary-title">Omega Semester Summary</div>
+                    <div class="grid grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <div class="text-sm font-medium text-indigo-200 mb-1">Semester GPA</div>
+                            <div id="stat-gpa" class="text-4xl font-bold">0.00</div>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-indigo-200 mb-1">Total Units</div>
+                            <div id="stat-total-units" class="text-4xl font-bold">0</div>
+                        </div>
+                        <div class="col-span-2">
+                            <div class="text-sm font-medium text-indigo-200 mb-1">Total Grade Points</div>
+                            <div id="stat-grade-points" class="text-3xl font-bold">0.0</div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-indigo-200 mt-1">These figures reflect the selected semester's performance.</p>
+                </div>
+
+                <!-- Session CGPA Summary Card (New) -->
+                <div class="bg-green-600 text-white p-6 rounded-xl shadow-lg">
+                    <div class="text-sm font-medium text-green-200 mb-2">Sessional CGPA (Alpha + Omega)</div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <div class="text-sm font-medium text-green-200 mb-1">Session CGPA</div>
+                            <div id="stat-cgpa" class="text-4xl font-bold">0.00</div>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-green-200 mb-1">Total Units Carried</div>
+                            <div id="stat-cgpa-total-units" class="text-4xl font-bold">0</div>
+                        </div>
+                        <div class="col-span-2">
+                            <div class="text-sm font-medium text-green-200 mb-1">Overall Grade Points</div>
+                            <div id="stat-cgpa-grade-points" class="text-3xl font-bold">0.0</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Course Scores Tables -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- ALPHA SEMESTER TABLE -->
+                <div class="bg-white rounded-xl shadow-md" id="alpha-semester-container">
+                    <div class="p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+                        <h2 class="text-xl font-bold text-gray-800">Alpha Semester Scores (1st)</h2>
+                        <p class="text-sm text-gray-600">Enter your scores below (Test 1: max 20, Test 2: max 20, Exam: max 60)</p>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>Course Code</th>
+                                    <th>Course Title</th>
+                                    <th>Units</th>
+                                    <th>Test 1 (15)</th>
+                                    <th>Test 2 (15)</th>
+                                    <th>Exam (70)</th>
+                                    <th>Total (100)</th>
+                                    <th>Percentage</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alpha-course-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- Alpha data rendered here -->
+                            </tbody>
+                            <tfoot class="bg-gray-100 font-semibold">
+                                <tr>
+                                    <td colspan="3" class="text-right px-4 py-3">Semester Totals:</td>
+                                    <td id="alpha-footer-total-units" class="px-4 py-3">0</td>
+                                    <td colspan="5" class="text-right px-4 py-3">Total Grade Points:</td>
+                                    <td id="alpha-footer-grade-points" class="px-4 py-3">0.0</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="9" class="text-right px-4 py-3 text-base font-bold text-blue-600">Semester GPA (GPA):</td>
+                                    <td id="alpha-footer-gpa" class="px-4 py-3 text-base font-bold text-blue-600">0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- OMEGA SEMESTER TABLE -->
+                <div class="bg-white rounded-xl shadow-md" id="omega-semester-container">
+                    <div class="p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+                        <h2 class="text-xl font-bold text-gray-800">Omega Semester Scores (2nd)</h2>
+                        <p class="text-sm text-gray-600">Enter your scores below (Test 1: max 20, Test 2: max 20, Exam: max 60)</p>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>Course Code</th>
+                                    <th>Course Title</th>
+                                    <th>Units</th>
+                                    <th>Test 1 (15)</th>
+                                    <th>Test 2 (15)</th>
+                                    <th>Exam (70)</th>
+                                    <th>Total (100)</th>
+                                    <th>Percentage</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="omega-course-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- Omega data rendered here -->
+                            </tbody>
+                            <tfoot class="bg-gray-100 font-semibold">
+                                <tr>
+                                    <td colspan="3" class="text-right px-4 py-3">Semester Totals:</td>
+                                    <td id="omega-footer-total-units" class="px-4 py-3">0</td>
+                                    <td colspan="5" class="text-right px-4 py-3">Total Grade Points:</td>
+                                    <td id="omega-footer-grade-points" class="px-4 py-3">0.0</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="9" class="text-right px-4 py-3 text-base font-bold text-indigo-600">Semester GPA (GPA):</td>
+                                    <td id="omega-footer-gpa" class="px-4 py-3 text-base font-bold text-indigo-600">0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+
+        // Courses provided in the initial screenshot (Omega Semester)
+        const omegaCourseDataTemplate = [
+            { id: 1, sn: 1, code: 'GST111A', title: 'Communication in English I', units: 2, test1: null, test2: null, exam: null },
+            { id: 2, sn: 2, code: 'ITE111', title: 'IT Essentials', units: 0, test1: null, test2: null, exam: null },
+            { id: 3, sn: 3, code: 'COS101', title: 'Introduction to Computing Sciences', units: 3, test1: null, test2: null, exam: null },
+            { id: 4, sn: 4, code: 'LMU-COS111', title: 'Computer Science and the Society', units: 2, test1: null, test2: null, exam: null },
+            { id: 5, sn: 5, code: 'LMU-CST111', title: 'Use of Library, Study Skills...', units: 2, test1: null, test2: null, exam: null },
+            { id: 6, sn: 6, code: 'LMU-TMC111', title: 'Total Man Concept I', units: 1, test1: null, test2: null, exam: null },
+            { id: 7, sn: 7, code: 'MTH101', title: 'Elementary Mathematics I', units: 2, test1: null, test2: null, exam: null },
+            { id: 8, sn: 8, code: 'PHY101', title: 'General Physics I', units: 2, test1: null, test2: null, exam: null },
+            { id: 9, sn: 9, code: 'PHY107', title: 'General Physics Practical I', units: 1, test1: null, test2: null, exam: null },
+            { id: 10, sn: 10, code: 'STA111', title: 'Descriptive Statistics', units: 3, test1: null, test2: null, exam: null },
+            { id: 11, sn: 11, code: 'LMU-EDS111', title: 'Entrepreneurial Development Studies I', units: 1, test1: null, test2: null, exam: null },
+            { id: 12, sn: 12, code: 'ADC111', title: 'Enterprise in Pipper & Leafy Veg. Prod. I', units: 1, test1: null, test2: null, exam: null }
+        ];
+
+        // Placeholder courses for the Alpha Semester
+        const alphaCourseDataTemplate = [
+            { id: 101, sn: 1, code: 'GST112A', title: 'Communication in English II', units: 2, test1: null, test2: null, exam: null },
+            { id: 102, sn: 2, code: 'LMU-COS112', title: 'Intro to Internet Technologies', units: 2, test1: null, test2: null, exam: null },
+            { id: 103, sn: 3, code: 'COS102', title: 'Intro to Computer Programming', units: 3, test1: null, test2: null, exam: null },
+            { id: 104, sn: 4, code: 'MTH102', title: 'Elementary Mathematics II', units: 2, test1: null, test2: null, exam: null },
+            { id: 105, sn: 5, code: 'PHY102', title: 'General Physics II', units: 2, test1: null, test2: null, exam: null },
+            { id: 106, sn: 6, code: 'PHY108', title: 'General Physics Practical II', units: 1, test1: null, test2: null, exam: null },
+            { id: 107, sn: 7, code: 'LMU-TMC112', title: 'Total Man Concept II', units: 1, test1: null, test2: null, exam: null },
+            { id: 108, sn: 8, code: 'STA112', title: 'Probability Distributions', units: 3, test1: null, test2: null, exam: null },
+            { id: 109, sn: 9, code: 'ADC112', title: 'Enterprise in Poultry Prod. II', units: 1, test1: null, test2: null, exam: null },
+            { id: 110, sn: 10, code: 'LMU-EDS112', title: 'Entrepreneurial Dev. Studies II', units: 1, test1: null, test2: null, exam: null },
+            { id: 111, sn: 11, code: 'MTH104', title: 'Trigonometry & Vectors', units: 2, test1: null, test2: null, exam: null },
+        ];
+
+
+        // Based on Landmark University's grading system
+        const gradingScale = [
+            { score: 70, grade: 'A', points: 5 },
+            { score: 60, grade: 'B', points: 4 },
+            { score: 50, grade: 'C', points: 3 },
+            { score: 45, grade: 'D', points: 2 },
+            { score: 40, grade: 'E', points: 1 },
+            { score: 0, grade: 'F', points: 0 }
+        ];
+
+        // --- STATE ---
+        let semesterData = { 
+            alpha: [], 
+            omega: [] 
+        };
+        let activeSemester = 'omega'; // Default view
+
+        // --- FUNCTIONS ---
+
+        /**
+         * Initializes the application when the DOM is loaded.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            
+            // Render both tables
+            renderTable('alpha', semesterData.alpha);
+            renderTable('omega', semesterData.omega);
+
+            // Set initial active semester
+            document.getElementById('semester-select').value = activeSemester;
+            
+            calculateAndUpdateSummary();
+
+            // Add event listeners
+            document.getElementById('alpha-semester-container').addEventListener('input', (e) => handleScoreInput(e, 'alpha'));
+            document.getElementById('omega-semester-container').addEventListener('input', (e) => handleScoreInput(e, 'omega'));
+            document.getElementById('semester-select').addEventListener('change', handleSemesterChange);
+        });
+
+        /**
+         * Loads data from localStorage or sets initial data.
+         */
+        function loadData() {
+            const savedData = localStorage.getItem('sessionalGpaMonitoringData');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                semesterData = parsedData.data;
+                activeSemester = parsedData.active || 'omega';
+            } else {
+                // Initialize state from templates
+                const initializeSemester = (template) => template.map(course => ({
+                    ...course,
+                    total: 0,
+                    grade: '-',
+                    gradePoints: 0,
+                    score: { test1: null, test2: null, exam: null } // Use a separate score object for cleaner persistence
+                }));
+                semesterData.alpha = initializeSemester(alphaCourseDataTemplate);
+                semesterData.omega = initializeSemester(omegaCourseDataTemplate);
+            }
+        }
+
+        /**
+         * Saves the current courseData state to localStorage.
+         */
+        function saveData() {
+            localStorage.setItem('sessionalGpaMonitoringData', JSON.stringify({ 
+                data: semesterData, 
+                active: activeSemester 
+            }));
+        }
+        
+        /**
+         * Handles change in the semester dropdown selector.
+         */
+        function handleSemesterChange(event) {
+            activeSemester = event.target.value;
+            saveData();
+            calculateAndUpdateSummary();
+        }
+
+        /**
+         * Renders a specific course table.
+         */
+        function renderTable(semesterId, courses) {
+            const tableBody = document.getElementById(`${semesterId}-course-table-body`);
+            tableBody.innerHTML = ''; // Clear existing table
+            
+            courses.forEach(course => {
+                const tr = document.createElement('tr');
+                tr.dataset.courseId = course.id;
+                
+                // Helper to check for null/undefined and return empty string
+                const val = (field) => course.score[field] === null || typeof course.score[field] === 'undefined' ? '' : course.score[field];
+
+                tr.innerHTML = `
+                    <td>${course.sn}</td>
+                    <td class="font-medium">${course.code}</td>
+                    <td>${course.title}</td>
+                    <td class="font-semibold">${course.units}</td>
+                    <td><input type="number" data-score-type="test1" min="0" max="20" value="${val('test1')}"></td>
+                    <td><input type="number" data-score-type="test2" min="0" max="20" value="${val('test2')}"></td>
+                    <td><input type="number" data-score-type="exam" min="0" max="60" value="${val('exam')}"></td>
+                    <td data-output-type="total" class="font-bold">0</td>
+                    <td data-output-type="percentage">0%</td>
+                    <td data-output-type="grade" class="font-bold text-lg">-</td>
+                `;
+                tableBody.appendChild(tr);
+
+                // Perform initial calculation for this row
+                calculateAndUpdateRow(semesterId, course, tr);
+            });
+        }
+
+        /**
+         * Handles input events from the score fields.
+         */
+        function handleScoreInput(event, semesterId) {
+            const input = event.target;
+            if (input.tagName !== 'INPUT') return; 
+
+            const row = input.closest('tr');
+            const courseId = parseInt(row.dataset.courseId);
+            const scoreType = input.dataset.scoreType;
+            
+            let value = input.value === '' ? null : parseInt(input.value);
+
+            // Validate and clamp score
+            const maxScore = { test1: 15, test2: 15, exam: 70 };
+            if (value !== null) {
+                value = Math.max(0, Math.min(maxScore[scoreType], value));
+                input.value = value;
+            }
+
+            // Update the data model
+            const course = semesterData[semesterId].find(c => c.id === courseId);
+            course.score[scoreType] = value;
+
+            // Recalculate and update the row and summary
+            calculateAndUpdateRow(semesterId, course, row);
+            calculateAndUpdateSummary();
+            saveData();
+        }
+
+        /**
+         * Calculates the total, grade, and grade points for a single course and updates its row in the DOM.
+         */
+        function calculateAndUpdateRow(semesterId, course, rowElement) {
+            const { test1, test2, exam } = course.score;
+            
+            if (test1 !== null && test2 !== null && exam !== null) {
+                course.total = test1 + test2 + exam;
+                const gradeInfo = getGrade(course.total);
+                course.grade = gradeInfo.grade;
+                course.gradePoints = gradeInfo.points;
+            } else {
+                course.total = 0;
+                course.grade = '-';
+                course.gradePoints = 0;
+            }
+
+            // Update the DOM
+            rowElement.querySelector('[data-output-type="total"]').innerText = course.total;
+            rowElement.querySelector('[data-output-type="percentage"]').innerText = `${course.total}%`;
+            const gradeCell = rowElement.querySelector('[data-output-type="grade"]');
+            gradeCell.innerText = course.grade;
+            
+            // Add color to grade
+            gradeCell.className = 'font-bold text-lg'; // Reset classes
+            if (course.grade === 'A') gradeCell.classList.add('text-green-600');
+            else if (course.grade === 'B') gradeCell.classList.add('text-blue-600');
+            else if (course.grade === 'C') gradeCell.classList.add('text-yellow-600');
+            else if (course.grade === 'D' || course.grade === 'E') gradeCell.classList.add('text-orange-600');
+            else if (course.grade === 'F') gradeCell.classList.add('text-red-600');
+        }
+
+        /**
+         * Calculates and returns summary object for a single semester.
+         */
+        function calculateSemesterSummary(semesterCourses) {
+            let totalRegisteredUnits = 0;
+            let totalEarnedGradePoints = 0;
+            let unitsForGpaCalc = 0; 
+
+            for (const course of semesterCourses) {
+                totalRegisteredUnits += course.units;
+                
+                if (course.grade !== '-') {
+                    totalEarnedGradePoints += (course.gradePoints * course.units);
+                    unitsForGpaCalc += course.units;
+                }
+            }
+
+            const gpa = unitsForGpaCalc > 0 ? (totalEarnedGradePoints / unitsForGpaCalc) : 0;
+
+            return {
+                totalRegisteredUnits,
+                totalEarnedGradePoints,
+                gpa
+            };
+        }
+
+
+        /**
+         * Calculates and updates all summary statistics (footer, semester card, and CGPA card).
+         */
+        function calculateAndUpdateSummary() {
+            const alphaSummary = calculateSemesterSummary(semesterData.alpha);
+            const omegaSummary = calculateSemesterSummary(semesterData.omega);
+
+            // --- 1. Update Footer for Alpha Semester ---
+            document.getElementById('alpha-footer-total-units').innerText = alphaSummary.totalRegisteredUnits;
+            document.getElementById('alpha-footer-grade-points').innerText = alphaSummary.totalEarnedGradePoints.toFixed(1);
+            document.getElementById('alpha-footer-gpa').innerText = alphaSummary.gpa.toFixed(2);
+            
+            // --- 2. Update Footer for Omega Semester ---
+            document.getElementById('omega-footer-total-units').innerText = omegaSummary.totalRegisteredUnits;
+            document.getElementById('omega-footer-grade-points').innerText = omegaSummary.totalEarnedGradePoints.toFixed(1);
+            document.getElementById('omega-footer-gpa').innerText = omegaSummary.gpa.toFixed(2);
+
+            // --- 3. Update Active Semester Card (Left Column) ---
+            const activeSummary = activeSemester === 'alpha' ? alphaSummary : omegaSummary;
+            document.getElementById('semester-summary-title').innerText = activeSemester === 'alpha' ? 'Alpha Semester Summary (1st)' : 'Omega Semester Summary (2nd)';
+            document.getElementById('stat-gpa').innerText = activeSummary.gpa.toFixed(2);
+            document.getElementById('stat-total-units').innerText = activeSummary.totalRegisteredUnits;
+            document.getElementById('stat-grade-points').innerText = activeSummary.totalEarnedGradePoints.toFixed(1);
+
+            // --- 4. Calculate and Update Sessional CGPA Card ---
+            const totalUnitsCarried = (alphaSummary.totalRegisteredUnits) + (omegaSummary.totalRegisteredUnits);
+            const totalGradePoints = alphaSummary.totalEarnedGradePoints + omegaSummary.totalEarnedGradePoints;
+            
+            // CGPA Calculation: Only use units from courses that have been graded (totalRegisteredUnits includes all, including 0-unit courses)
+            // unitsForGpaCalc is implicitly included in the totalGradePoints/totalUnitsCarried logic above, but we must ensure we only divide by units that yielded points.
+            let totalUnitsForDivision = 0;
+            for(const course of [...semesterData.alpha, ...semesterData.omega]) {
+                if(course.grade !== '-') {
+                    totalUnitsForDivision += course.units;
+                }
+            }
+            
+            const cgpa = totalUnitsForDivision > 0 ? (totalGradePoints / totalUnitsForDivision) : 0;
+
+            document.getElementById('stat-cgpa').innerText = cgpa.toFixed(2);
+            document.getElementById('stat-cgpa-total-units').innerText = totalUnitsCarried;
+            document.getElementById('stat-cgpa-grade-points').innerText = totalGradePoints.toFixed(1);
+        }
+
+        /**
+         * Returns the grade and points for a given total score.
+         */
+        function getGrade(score) {
+            for (const scale of gradingScale) {
+                if (score >= scale.score) {
+                    return { grade: scale.grade, points: scale.points };
+                }
+            }
+            return { grade: 'F', points: 0 }; // Default
+        }
+
+    </script>
+</body>
+</html>

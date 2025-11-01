@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Degree Progress Tracker | Computer Science</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6; /* A very light, soft gray */
+        }
+        /* Custom styles for number inputs (hide arrows) */
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Style for table headers */
+        th {
+            @apply px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider;
+        }
+        /* Style for table cells */
+        td {
+            @apply px-4 py-4 text-sm text-gray-800 whitespace-nowrap;
+        }
+        /* Style for input fields in table */
+        td input {
+            @apply w-16 p-2 text-center border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500;
+        }
+        .tab-button.active {
+            @apply bg-indigo-600 text-white shadow-lg;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+
+        <header class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">CS Degree Performance Dashboard</h1>
+            <p class="mt-1 text-lg text-gray-600">Monitor your 100-Level performance and track your cumulative CGPA.</p>
+        </header>
+
+        <div class="mb-8 flex space-x-2 p-1 bg-gray-200 rounded-xl max-w-lg">
+            <button id="tab-sessional" class="tab-button active flex-1 py-2 px-4 rounded-xl font-semibold text-sm transition" onclick="switchView('sessional')">
+                100L Sessional Monitor
+            </button>
+            <button id="tab-degree" class="tab-button flex-1 py-2 px-4 rounded-xl font-semibold text-sm transition" onclick="switchView('degree')">
+                Full Degree Progress (100L-400L)
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <div class="lg:col-span-1 space-y-6">
+                
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Actions & Controls</h2>
+                    
+                    <div id="sessional-controls">
+                        <label for="semester-select" class="block text-sm font-medium text-gray-700 mb-2">Select Semester for Monitor View</label>
+                        <select id="semester-select" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="100-omega" selected>100 Level - Omega Semester (2nd)</option>
+                            <option value="100-alpha">100 Level - Alpha Semester (1st)</option>
+                        </select>
+                    </div>
+
+                    <button id="export-button" onclick="exportResultsToCSV()" class="w-full bg-indigo-600 text-white font-semibold py-3 px-4 rounded-lg mt-4 hover:bg-indigo-700 transition duration-200 flex items-center justify-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Export All Data to CSV</span>
+                    </button>
+                </div>
+
+                <div id="summary-card" class="bg-indigo-700 text-white p-6 rounded-xl shadow-lg">
+                    </div>
+
+            </div>
+
+            <div class="lg:col-span-2 space-y-8">
+                
+                <div id="sessional-view-container">
+                    
+                    <div class="bg-white rounded-xl shadow-md mb-8" id="100-alpha-semester-container">
+                        <div class="p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+                            <h2 class="text-xl font-bold text-gray-800">100 Level: Alpha Semester Scores (1st)</h2>
+                            <p class="text-sm text-gray-600">Enter scores (Test 1: max 20, Test 2: max 20, Exam: max 60)</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th>S/N</th>
+                                        <th>Course Code</th>
+                                        <th>Course Title</th>
+                                        <th>Units</th>
+                                        <th>Test 1 (20)</th>
+                                        <th>Test 2 (20)</th>
+                                        <th>Exam (60)</th>
+                                        <th>Total (100)</th>
+                                        <th>Grade</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="100-alpha-course-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                                <tfoot class="bg-gray-100 font-semibold">
+                                    <tr>
+                                        <td colspan="3" class="text-right px-4 py-3">Semester Totals:</td>
+                                        <td id="100-alpha-footer-total-units" class="px-4 py-3">0</td>
+                                        <td colspan="4" class="text-right px-4 py-3 text-base font-bold text-blue-600">Semester GPA (SGPA):</td>
+                                        <td id="100-alpha-footer-gpa" class="px-4 py-3 text-base font-bold text-blue-600">0.00</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-md" id="100-omega-semester-container">
+                        <div class="p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+                            <h2 class="text-xl font-bold text-gray-800">100 Level: Omega Semester Scores (2nd)</h2>
+                            <p class="text-sm text-gray-600">Enter scores (Test 1: max 20, Test 2: max 20, Exam: max 60)</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th>S/N</th>
+                                        <th>Course Code</th>
+                                        <th>Course Title</th>
+                                        <th>Units</th>
+                                        <th>Test 1 (20)</th>
+                                        <th>Test 2 (20)</th>
+                                        <th>Exam (60)</th>
+                                        <th>Total (100)</th>
+                                        <th>Grade</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="100-omega-course-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                                <tfoot class="bg-gray-100 font-semibold">
+                                    <tr>
+                                        <td colspan="3" class="text-right px-4 py-3">Semester Totals:</td>
+                                        <td id="100-omega-footer-total-units" class="px-4 py-3">0</td>
+                                        <td colspan="4" class="text-right px-4 py-3 text-base font-bold text-indigo-600">Semester GPA (SGPA):</td>
+                                        <td id="100-omega-footer-gpa" class="px-4 py-3 text-base font-bold text-indigo-600">0.00</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="degree-view-container" class="hidden">
+                    <div class="bg-white rounded-xl shadow-md">
+                        <div class="p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+                            <h2 class="text-xl font-bold text-gray-800">Cumulative Degree Performance</h2>
+                            <p class="text-sm text-gray-600">Summary of all academic levels (100L - 400L).</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="w-1/4">Academic Level</th>
+                                        <th class="text-center">Total Units Earned</th>
+                                        <th class="text-center">Level CGPA</th>
+                                        <th class="text-center">Total Grade Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="degree-summary-body" class="bg-white divide-y divide-gray-200">
+                                    </tbody>
+                                <tfoot class="bg-gray-100 font-extrabold text-lg">
+                                    <tr>
+                                        <td class="px-4 py-4 text-gray-900">Overall Cumulative CGPA:</td>
+                                        <td id="final-units" class="text-center text-indigo-700">0</td>
+                                        <td id="final-cgpa" class="text-center text-indigo-700">0.00</td>
+                                        <td id="final-points" class="text-center text-indigo-700">0.0</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="p-6 text-sm text-gray-500 italic border-t">
+                            Note: The courses for 200L, 300L, and 400L are placeholders. Please update the data structures in the JavaScript code to reflect your actual courses as you progress.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA TEMPLATES ---
+
+        // Helper to generate generic placeholder courses for higher levels
+        const generatePlaceholderCourses = (level, units) => {
+            const courses = [];
+            for (let i = 1; i <= 10; i++) {
+                courses.push({
+                    id: level * 1000 + i,
+                    sn: i,
+                    code: `COS${level * 100 + (i < 10 ? '0' : '') + i}`,
+                    title: `Placeholder Course ${level * 100 + i}`,
+                    units: units,
+                    test1: null,
+                    test2: null,
+                    exam: null
+                });
+            }
+            return courses;
+        };
+
+        const courseDataTemplates = {
+            // 100 Level - Alpha Semester Courses (1st) - **COURSES FROM SCREENSHOT 1**
+            '100-alpha': [
+                { id: 1, sn: 1, code: 'GST111A', title: 'Communication in English I', units: 2, test1: null, test2: null, exam: null },
+                { id: 2, sn: 2, code: 'ITE111', title: 'IT Essentials', units: 0, test1: null, test2: null, exam: null },
+                { id: 3, sn: 3, code: 'COS101', title: 'Introduction to Computing Sciences', units: 3, test1: null, test2: null, exam: null },
+                { id: 4, sn: 4, code: 'LMU-COS111', title: 'Computer Science and the Society', units: 2, test1: null, test2: null, exam: null },
+                { id: 5, sn: 5, code: 'LMU-CST111', title: 'Use of Library, Study Skills and Information Mgt', units: 2, test1: null, test2: null, exam: null },
+                { id: 6, sn: 6, code: 'LMU-TMC111', title: 'Total Man Concept I', units: 1, test1: null, test2: null, exam: null },
+                { id: 7, sn: 7, code: 'MTH101', title: 'Elementary Mathematics I', units: 2, test1: null, test2: null, exam: null },
+                { id: 8, sn: 8, code: 'PHY101', title: 'General Physics I', units: 3, test1: null, test2: null, exam: null },
+                { id: 9, sn: 9, code: 'PHY107', title: 'General Physics Practical I', units: 1, test1: null, test2: null, exam: null },
+            ],
+            // 100 Level - Omega Semester Courses (2nd) - **COURSES FROM SCREENSHOT 2**
+            '100-omega': [
+                { id: 101, sn: 1, code: 'GST112A', title: 'Communication in English II', units: 2, test1: null, test2: null, exam: null },
+                { id: 102, sn: 2, code: 'COS102', title: 'Intro to Computer Programming', units: 3, test1: null, test2: null, exam: null },
+                { id: 103, sn: 3, code: 'LMU-CST112', title: 'Intro to Programming in Scientific Areas', units: 3, test1: null, test2: null, exam: null },
+                { id: 104, sn: 4, code: 'MTH102', title: 'Elementary Mathematics II', units: 2, test1: null, test2: null, exam: null },
+                { id: 105, sn: 5, code: 'PHY102', title: 'General Physics II', units: 2, test1: null, test2: null, exam: null },
+                { id: 106, sn: 6, code: 'PHY108', title: 'General Physics Practical II', units: 1, test1: null, test2: null, exam: null },
+                { id: 107, sn: 7, code: 'LMU-TMC112', title: 'Total Man Concept II', units: 1, test1: null, test2: null, exam: null },
+                { id: 108, sn: 8, code: 'STA112', title: 'Probability Distributions', units: 3, test1: null, test2: null, exam: null },
+                { id: 109, sn: 9, code: 'ADC112', title: 'Enterprise in Poultry Prod. II', units: 1, test1: null, test2: null, exam: null },
+                { id: 110, sn: 10, code: 'LMU-EDS112', title: 'Entrepreneurial Dev. Studies II', units: 1, test1: null, test2: null, exam: null },
+                { id: 111, sn: 11, code: 'MTH104', title: 'Trigonometry & Vectors', units: 2, test1: null, test2: null, exam: null },
+            ],
+            // Placeholder courses for higher levels - **(You need to update these later)**
+            '200-alpha': generatePlaceholderCourses(2, 3),
+            '200-omega': generatePlaceholderCourses(2, 2),
+            '300-alpha': generatePlaceholderCourses(3, 3),
+            '300-omega': generatePlaceholderCourses(3, 2),
+            '400-alpha': generatePlaceholderCourses(4, 4),
+            '400-omega': generatePlaceholderCourses(4, 3),
+        };
+
+        const gradingScale = [
+            { score: 70, grade: 'A', points: 5 },
+            { score: 60, grade: 'B', points: 4 },
+            { score: 50, grade: 'C', points: 3 },
+            { score: 45, grade: 'D', points: 2 },
+            { score: 40, grade: 'E', points: 1 },
+            { score: 0, grade: 'F', points: 0 }
+        ];
+
+        // --- STATE ---
+        let degreeData = {};
+        let activeSemesterId = '100-omega';
+        let currentView = 'sessional'; // 'sessional' or 'degree'
+
+        // All semesters keys
+        const allSemesterIds = [
+            '100-alpha', '100-omega',
+            '200-alpha', '200-omega',
+            '300-alpha', '300-omega',
+            '400-alpha', '400-omega'
+        ];
+
+        // --- CORE FUNCTIONS ---
+
+        /**
+         * Initializes the application.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            // Bind events
+            document.getElementById('semester-select').addEventListener('change', handleSemesterChange);
+            
+            // Initial render
+            for (const id of allSemesterIds) {
+                renderTable(id, degreeData[id]);
+            }
+
+            // Set initial state based on loaded data
+            document.getElementById('semester-select').value = activeSemesterId;
+            switchView(currentView, false); // Do not save state on initial load
+        });
+
+        /**
+         * Initializes the score properties for a new course.
+         */
+        function initializeSemester(template) {
+            return template.map(course => ({
+                ...course,
+                total: 0,
+                grade: '-',
+                gradePoints: 0,
+                totalGradePoints: 0,
+                score: { test1: null, test2: null, exam: null }
+            }));
+        }
+
+        /**
+         * Loads courseData from localStorage or initializes with templates.
+         */
+        function loadData() {
+            const storedData = localStorage.getItem('csDegreeProgressData');
+            if (storedData) {
+                const parsedData = JSON.parse(storedData);
+                // Check if the structure of 100L courses has changed and update if necessary
+                // This logic ensures existing scores are preserved unless a course is completely removed.
+                const newDegreeData = {};
+                for (const id of allSemesterIds) {
+                    const templateCourses = courseDataTemplates[id];
+                    const storedCourses = parsedData.data[id] || [];
+                    
+                    if (id.startsWith('100')) {
+                         // Merge stored data with new template data (by code or title)
+                        newDegreeData[id] = templateCourses.map(templateCourse => {
+                            const storedCourse = storedCourses.find(c => c.code === templateCourse.code) || {};
+                            return {
+                                ...templateCourse,
+                                total: storedCourse.total || 0,
+                                grade: storedCourse.grade || '-',
+                                gradePoints: storedCourse.gradePoints || 0,
+                                totalGradePoints: storedCourse.totalGradePoints || 0,
+                                score: storedCourse.score || { test1: null, test2: null, exam: null }
+                            };
+                        });
+                    } else {
+                        // For 200L-400L, just re-initialize if the user hasn't customized the template
+                         newDegreeData[id] = initializeSemester(templateCourses);
+                    }
+                }
+                degreeData = newDegreeData;
+                activeSemesterId = parsedData.activeId;
+                currentView = parsedData.view;
+            } else {
+                for (const id of allSemesterIds) {
+                    degreeData[id] = initializeSemester(courseDataTemplates[id]);
+                }
+            }
+        }
+
+        /**
+         * Saves the current degreeData state to localStorage.
+         */
+        function saveData() {
+            localStorage.setItem('csDegreeProgressData', JSON.stringify({
+                data: degreeData,
+                activeId: activeSemesterId,
+                view: currentView
+            }));
+        }
+
+        /**
+         * Toggles between the Sessional Monitor and Degree Progress views.
+         */
+        function switchView(viewId, shouldSave = true) {
+            currentView = viewId;
+            const sessionalContainer = document.getElementById('sessional-view-container');
+            const degreeContainer = document.getElementById('degree-view-container');
+            const tabs = document.querySelectorAll('.tab-button');
+            const sessionalControls = document.getElementById('sessional-controls');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`tab-${viewId}`).classList.add('active');
+
+            if (viewId === 'sessional') {
+                sessionalContainer.classList.remove('hidden');
+                degreeContainer.classList.add('hidden');
+                sessionalControls.classList.remove('hidden');
+
+                // Hide non-active 100L semester table
+                document.getElementById('100-alpha-semester-container').classList.add('hidden');
+                document.getElementById('100-omega-semester-container').classList.add('hidden');
+                document.getElementById(activeSemesterId.replace('100-alpha', '100-alpha-semester-container').replace('100-omega', '100-omega-semester-container')).classList.remove('hidden');
+            } else { // degree view
+                sessionalContainer.classList.add('hidden');
+                degreeContainer.classList.remove('hidden');
+                sessionalControls.classList.add('hidden');
+            }
+
+            calculateAndUpdateSummary();
+            if (shouldSave) saveData();
+        }
+
+        /**
+         * Handles change in the semester dropdown selector.
+         */
+        function handleSemesterChange(event) {
+            activeSemesterId = event.target.value;
+            saveData();
+
+            // Toggle visibility of the 100L tables
+            document.getElementById('100-alpha-semester-container').classList.add('hidden');
+            document.getElementById('100-omega-semester-container').classList.add('hidden');
+            document.getElementById(activeSemesterId.replace('100-alpha', '100-alpha-semester-container').replace('100-omega', '100-omega-semester-container')).classList.remove('hidden');
+
+            calculateAndUpdateSummary();
+        }
+
+        /**
+         * Renders a specific course table.
+         */
+        function renderTable(semesterId, courses) {
+            const tableBody = document.getElementById(`${semesterId}-course-table-body`);
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+
+            const is100L = semesterId.startsWith('100');
+
+            courses.forEach(course => {
+                const tr = document.createElement('tr');
+                tr.dataset.courseId = course.id;
+
+                // Helper to check for null/undefined and return empty string
+                const val = (field) => course.score[field] === null || typeof course.score[field] === 'undefined' ? '' : course.score[field];
+
+                // Note: Only 100L courses are inputtable, others are summary views in this simple setup
+                if (is100L) {
+                    tr.innerHTML = `
+                        <td>${course.sn}</td>
+                        <td class="font-medium">${course.code}</td>
+                        <td>${course.title}</td>
+                        <td class="font-semibold">${course.units}</td>
+                        <td><input type="number" data-score-type="test1" min="0" max="20" value="${val('test1')}"></td>
+                        <td><input type="number" data-score-type="test2" min="0" max="20" value="${val('test2')}"></td>
+                        <td><input type="number" data-score-type="exam" min="0" max="60" value="${val('exam')}"></td>
+                        <td data-output-type="total" class="font-bold">0</td>
+                        <td data-output-type="grade" class="font-bold text-lg">-</td>
+                    `;
+
+                    // Bind input event to each score field
+                    tr.querySelectorAll('input[type="number"]').forEach(input => {
+                        input.addEventListener('input', (event) => {
+                            handleScoreInput(semesterId, course, input, tr);
+                        });
+                    });
+                } else {
+                    // For placeholder courses (200L-400L), show summary data only
+                    tr.innerHTML = `
+                        <td>${course.sn}</td>
+                        <td class="font-medium">${course.code}</td>
+                        <td>${course.title}</td>
+                        <td class="font-semibold">${course.units}</td>
+                        <td colspan="3" class="text-center text-gray-400">N/A (Placeholder)</td>
+                        <td data-output-type="total" class="font-bold">${course.total}</td>
+                        <td data-output-type="grade" class="font-bold text-lg">${course.grade}</td>
+                    `;
+                    // Update grade cell color for non-input rows as well
+                    calculateAndUpdateRow(semesterId, course, tr); 
+                }
+
+                tableBody.appendChild(tr);
+
+                // Perform initial calculation for this row
+                calculateAndUpdateRow(semesterId, course, tr);
+            });
+        }
+
+        /**
+         * Handles the input event for a course score.
+         */
+        function handleScoreInput(semesterId, course, inputElement, rowElement) {
+            const scoreType = inputElement.dataset.scoreType;
+            let value = parseInt(inputElement.value);
+            const max = parseInt(inputElement.max);
+            const min = parseInt(inputElement.min);
+
+            if (isNaN(value) || inputElement.value === '') {
+                course.score[scoreType] = null;
+            } else {
+                // Enforce min/max
+                if (value > max) {
+                    value = max;
+                    inputElement.value = max;
+                } else if (value < min) {
+                    value = min;
+                    inputElement.value = min;
+                }
+                course.score[scoreType] = value;
+            }
+
+            calculateAndUpdateRow(semesterId, course, rowElement);
+            calculateAndUpdateSummary();
+            saveData();
+        }
+
+        /**
+         * Calculates the total, grade, and grade points for a single course and updates its row in the DOM.
+         */
+        function calculateAndUpdateRow(semesterId, course, rowElement) {
+            const { test1, test2, exam } = course.score;
+
+            if (test1 !== null && test2 !== null && exam !== null) {
+                course.total = test1 + test2 + exam;
+                const gradeInfo = getGrade(course.total);
+                course.grade = gradeInfo.grade;
+                course.gradePoints = course.units > 0 ? gradeInfo.points : 0;
+                course.totalGradePoints = course.gradePoints * course.units;
+            } else {
+                course.total = 0;
+                course.grade = '-';
+                course.gradePoints = 0;
+                course.totalGradePoints = 0;
+            }
+
+            // Update the DOM
+            if(rowElement) {
+                rowElement.querySelector('[data-output-type="total"]').innerText = course.total;
+                const gradeCell = rowElement.querySelector('[data-output-type="grade"]');
+                gradeCell.innerText = course.grade;
+
+                // Add color to grade
+                gradeCell.className = 'font-bold text-lg'; // Reset classes
+                if (course.grade === 'A') gradeCell.classList.add('text-green-600');
+                else if (course.grade === 'B') gradeCell.classList.add('text-blue-600');
+                else if (course.grade === 'C') gradeCell.classList.add('text-yellow-600');
+                else if (course.grade === 'D' || course.grade === 'E') gradeCell.classList.add('text-orange-600');
+                else if (course.grade === 'F') gradeCell.classList.add('text-red-600');
+            }
+        }
+
+        /**
+         * Calculates and returns summary object for a single semester.
+         */
+        function calculateSemesterSummary(semesterCourses) {
+            let totalRegisteredUnits = 0;
+            let totalEarnedGradePoints = 0;
+            let unitsForGpaCalc = 0;
+
+            for (const course of semesterCourses) {
+                totalRegisteredUnits += course.units;
+
+                // Only include courses that have been graded (total is calculated) AND have units > 0
+                if (course.grade !== '-' && course.units > 0) {
+                    totalEarnedGradePoints += (course.gradePoints * course.units);
+                    unitsForGpaCalc += course.units;
+                }
+            }
+
+            const gpa = unitsForGpaCalc > 0 ? (totalEarnedGradePoints / unitsForGpaCalc) : 0;
+
+            return {
+                totalRegisteredUnits,
+                totalEarnedGradePoints,
+                unitsForGpaCalc,
+                gpa
+            };
+        }
+
+        /**
+         * Calculates the overall CGPA across all levels.
+         */
+        function calculateDegreeCGPA() {
+            let overallTotalGradePoints = 0;
+            let overallUnitsForDivision = 0;
+            const levelSummaries = [];
+
+            // Group semesters by level
+            const levels = {
+                '100': ['100-alpha', '100-omega'],
+                '200': ['200-alpha', '200-omega'],
+                '300': ['300-alpha', '300-omega'],
+                '400': ['400-alpha', '400-omega'],
+            };
+
+            for (const level in levels) {
+                let levelTotalGradePoints = 0;
+                let levelUnitsForDivision = 0;
+                let levelTotalRegisteredUnits = 0;
+                const semesterIds = levels[level];
+
+                for (const id of semesterIds) {
+                    const summary = calculateSemesterSummary(degreeData[id]);
+                    levelTotalGradePoints += summary.totalEarnedGradePoints;
+                    levelUnitsForDivision += summary.unitsForGpaCalc;
+                    levelTotalRegisteredUnits += summary.totalRegisteredUnits;
+                }
+
+                // Calculate level CGPA
+                const levelCGPA = levelUnitsForDivision > 0 ? (levelTotalGradePoints / levelUnitsForDivision) : 0;
+
+                // Add to overall totals
+                overallTotalGradePoints += levelTotalGradePoints;
+                overallUnitsForDivision += levelUnitsForDivision;
+
+                // Store level summary
+                levelSummaries.push({
+                    level: `${level} Level`,
+                    totalUnits: levelTotalRegisteredUnits,
+                    totalGradePoints: levelTotalGradePoints,
+                    cgpa: levelCGPA,
+                    // Used for division calculation
+                    unitsForDivision: levelUnitsForDivision 
+                });
+            }
+
+            const overallCGPA = overallUnitsForDivision > 0 ? (overallTotalGradePoints / overallUnitsForDivision) : 0;
+
+            return {
+                levelSummaries,
+                overallCGPA: overallCGPA,
+                overallTotalGradePoints: overallTotalGradePoints,
+                overallTotalUnits: overallUnitsForDivision
+            };
+        }
+
+        /**
+         * Calculates and updates all summary statistics based on the current view.
+         */
+        function calculateAndUpdateSummary() {
+            const { levelSummaries, overallCGPA, overallTotalGradePoints, overallTotalUnits } = calculateDegreeCGPA();
+            const summaryCard = document.getElementById('summary-card');
+
+            // --- 1. Update Footers for 100L Tables ---
+            const alpha100 = calculateSemesterSummary(degreeData['100-alpha']);
+            const omega100 = calculateSemesterSummary(degreeData['100-omega']);
+            document.getElementById('100-alpha-footer-total-units').innerText = alpha100.totalRegisteredUnits;
+            document.getElementById('100-alpha-footer-gpa').innerText = alpha100.gpa.toFixed(2);
+            document.getElementById('100-omega-footer-total-units').innerText = omega100.totalRegisteredUnits;
+            document.getElementById('100-omega-footer-gpa').innerText = omega100.gpa.toFixed(2);
+            
+            if (currentView === 'sessional') {
+                // --- 2. Update Sessional Summary Card (100L) ---
+                const activeId = activeSemesterId;
+                const activeSummary = activeId === '100-alpha' ? alpha100 : omega100;
+                const activeTitle = activeId === '100-alpha' ? '100L Alpha Semester Summary' : '100L Omega Semester Summary';
+                const sessionalCGPA = levelSummaries[0].cgpa; // 100L CGPA
+
+                summaryCard.className = 'bg-indigo-700 text-white p-6 rounded-xl shadow-lg';
+                summaryCard.innerHTML = `
+                    <div class="text-sm font-medium text-indigo-200 mb-2">${activeTitle}</div>
+                    <div class="grid grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <div class="text-sm font-medium text-indigo-200 mb-1">Semester GPA</div>
+                            <div class="text-4xl font-bold">${activeSummary.gpa.toFixed(2)}</div>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-indigo-200 mb-1">Total Units</div>
+                            <div class="text-4xl font-bold">${activeSummary.unitsForGpaCalc}</div>
+                        </div>
+                        <div class="col-span-2">
+                            <div class="text-sm font-medium text-indigo-200 mb-1">Total Grade Points</div>
+                            <div class="text-3xl font-bold">${activeSummary.totalEarnedGradePoints.toFixed(1)}</div>
+                        </div>
+                    </div>
+                    
+                    <hr class="border-indigo-500 my-4" />
+
+                    <div class="text-sm font-medium text-green-200 mb-2">100L Cumulative CGPA</div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <div class="text-sm font-medium text-green-200 mb-1">Sessional CGPA</div>
+                            <div class="text-4xl font-bold">${sessionalCGPA.toFixed(2)}</div>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-green-200 mb-1">Total Units Carried</div>
+                            <div class="text-4xl font-bold">${levelSummaries[0].unitsForDivision}</div>
+                        </div>
+                        <div class="col-span-2">
+                            <div class="text-sm font-medium text-green-200 mb-1">Overall Grade Points</div>
+                            <div class="text-3xl font-bold">${levelSummaries[0].totalGradePoints.toFixed(1)}</div>
+                        </div>
+                    </div>
+                `;
+
+            } else {
+                // --- 3. Update Degree Progress Summary Card ---
+                const degreeClass = getClass(overallCGPA);
+                summaryCard.className = 'bg-green-600 text-white p-6 rounded-xl shadow-lg';
+                summaryCard.innerHTML = `
+                    <div class="text-sm font-medium text-green-200 mb-2">Overall Degree Progress (CGPA)</div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="col-span-2">
+                            <div class="text-sm font-medium text-green-200 mb-1">Cumulative CGPA</div>
+                            <div class="text-5xl font-extrabold">${overallCGPA.toFixed(2)}</div>
+                        </div>
+                        <div class="col-span-2">
+                            <div class="text-sm font-medium text-green-200 mb-1">Projected Class of Degree</div>
+                            <div class="text-3xl font-bold">${degreeClass.name}</div>
+                            <p class="text-sm text-green-300">CGPA Range: ${degreeClass.range}</p>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-green-200 mb-1">Total Units For CGPA</div>
+                            <div class="text-4xl font-bold">${overallTotalUnits}</div>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-green-200 mb-1">Total Grade Points</div>
+                            <div class="text-4xl font-bold">${overallTotalGradePoints.toFixed(1)}</div>
+                        </div>
+                    </div>
+                `;
+                
+                // --- 4. Update Degree Progress Table ---
+                const tableBody = document.getElementById('degree-summary-body');
+                tableBody.innerHTML = '';
+
+                levelSummaries.forEach(summary => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="px-4 py-3 font-semibold">${summary.level}</td>
+                        <td class="text-center">${summary.unitsForDivision}</td>
+                        <td class="text-center font-bold text-lg">${summary.cgpa.toFixed(2)}</td>
+                        <td class="text-center">${summary.totalGradePoints.toFixed(1)}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+
+                // Update final footer row
+                document.getElementById('final-units').innerText = overallTotalUnits;
+                document.getElementById('final-cgpa').innerText = overallCGPA.toFixed(2);
+                document.getElementById('final-points').innerText = overallTotalGradePoints.toFixed(1);
+            }
+        }
+
+        /**
+         * Returns the grade and points for a given total score (based on 5-point scale).
+         */
+        function getGrade(score) {
+            for (const scale of gradingScale) {
+                if (score >= scale.score) {
+                    return { grade: scale.grade, points: scale.points };
+                }
+            }
+            return { grade: 'F', points: 0 }; // Default
+        }
+
+        /**
+         * Returns the Degree Classification based on CGPA. (Standard Nigerian University classification)
+         */
+        function getClass(cgpa) {
+            if (cgpa >= 4.50) return { name: 'First Class Honours', range: '4.50 - 5.00' };
+            if (cgpa >= 3.50) return { name: 'Second Class Honours (Upper Division)', range: '3.50 - 4.49' };
+            if (cgpa >= 2.40) return { name: 'Second Class Honours (Lower Division)', range: '2.40 - 3.49' };
+            if (cgpa >= 1.50) return { name: 'Third Class Honours', range: '1.50 - 2.39' };
+            if (cgpa >= 1.00) return { name: 'Pass', range: '1.00 - 1.49' };
+            return { name: 'Fail', range: '0.00 - 0.99' };
+        }
+
+        /**
+         * Export the results of all 8 semesters and the overall CGPA summary to a CSV file.
+         */
+        function exportResultsToCSV() {
+            const { levelSummaries, overallCGPA, overallTotalGradePoints, overallTotalUnits } = calculateDegreeCGPA();
+            const degreeClass = getClass(overallCGPA);
+            const allCourses = [];
+            
+            // Collect all courses from all 8 semesters
+            for (const id of allSemesterIds) {
+                const [level, semester] = id.split('-');
+                const fullSemester = `${level}L ${semester === 'alpha' ? 'Alpha' : 'Omega'} Semester`;
+                degreeData[id].forEach(c => allCourses.push({...c, semesterId: id, fullSemester: fullSemester}));
+            }
+
+            const csvRows = [];
+            const separator = ',';
+
+            // --- Section 1: Header and Overall Summary ---
+            csvRows.push('Academic Degree Progress Report' + separator.repeat(10));
+            csvRows.push(''); // Blank row
+            
+            csvRows.push('Overall CGPA Summary' + separator.repeat(10));
+            csvRows.push(`Overall CGPA,${overallCGPA.toFixed(2)}`);
+            csvRows.push(`Total Grade Points,${overallTotalGradePoints.toFixed(1)}`);
+            csvRows.push(`Total Units Used for CGPA,${overallTotalUnits}`);
+            csvRows.push(`Projected Class of Degree,"${degreeClass.name} (${degreeClass.range})"`);
+            csvRows.push(''); // Blank row
+
+            // --- Section 2: Level Summaries ---
+            csvRows.push('Level Performance Summary' + separator.repeat(10));
+            csvRows.push('Academic Level,Total Units,Level CGPA,Total Grade Points');
+            levelSummaries.forEach(summary => {
+                const row = [
+                    summary.level,
+                    summary.unitsForDivision,
+                    summary.cgpa.toFixed(2),
+                    summary.totalGradePoints.toFixed(1)
+                ];
+                csvRows.push(row.join(separator));
+            });
+            csvRows.push(''); // Blank row
+
+            // --- Section 3: Detailed Course Scores ---
+            csvRows.push('Detailed Course Scores' + separator.repeat(10));
+            csvRows.push('Semester,S/N,Course Code,Course Title,Units,Test 1 (20),Test 2 (20),Exam (60),Total Score,Grade,Grade Points');
+
+            // Add course data
+            allCourses.forEach(course => {
+                const row = [
+                    course.fullSemester,
+                    course.sn,
+                    course.code,
+                    `"${course.title.replace(/"/g, '""')}"`, // Handle commas and quotes in titles
+                    course.units,
+                    course.score.test1 ?? '',
+                    course.score.test2 ?? '',
+                    course.score.exam ?? '',
+                    course.total,
+                    course.grade,
+                    (course.totalGradePoints).toFixed(1)
+                ];
+                csvRows.push(row.join(separator));
+            });
+            
+            csvRows.push(''); // Add a gap at the end
+
+            // Create Blob and link for download
+            const csvContent = csvRows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            // Generate a filename
+            const date = new Date().toISOString().slice(0, 10);
+            link.download = `CS_Degree_Report_${date}.csv`;
+            link.href = URL.createObjectURL(blob);
+            link.style.visibility = 'hidden';
+            
+            // Append and click the link to trigger the download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+    </script>
+</body>
+</html>
