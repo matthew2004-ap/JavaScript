@@ -28,15 +28,39 @@
         }
         /* Style for table headers */
         th {
-            @apply px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6B7280; /* text-gray-500 */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         /* Style for table cells */
         td {
-            @apply px-4 py-4 text-sm text-gray-800 whitespace-nowrap;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #1F2937; /* text-gray-800 */
+            white-space: nowrap;
         }
         /* Style for input fields in table */
         td input {
-            @apply w-16 p-2 text-center border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500;
+            width: 4rem;
+            padding: 0.5rem;
+            text-align: center;
+            border: 1px solid #D1D5DB; /* border-gray-300 */
+            border-radius: 0.375rem;
+            outline: none;
+        }
+        td input:focus {
+            border-color: #6366F1; /* border-indigo-500 */
+            box-shadow: 0 0 0 2px #6366F1; /* focus:ring-indigo-500 */
         }
         /* Custom scrollbar */
         ::-webkit-scrollbar {
@@ -73,7 +97,8 @@
                 <!-- Semester Selection Card -->
                 <div class="bg-white p-6 rounded-xl shadow-md">
                     <h2 class="text-lg font-semibold text-gray-800 mb-4">Select Semester for Summary</h2>
-                    <select id="semester-select" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500">
+                    <label for="semester-select" class="sr-only">Select Semester</label>
+                    <select id="semester-select" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500" aria-label="Select Semester">
                         <option value="omega" selected>Omega Semester (2nd)</option>
                         <option value="alpha">Alpha Semester (1st)</option>
                     </select>
