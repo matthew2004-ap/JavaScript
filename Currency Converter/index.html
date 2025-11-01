@@ -13,7 +13,8 @@
       <h1>Currency Converter</h1>
       <div class="converter">
          <input type="number" id="amount" placeholder="Enter amount" />
-         <select id="fromCurrency">
+         <label for="fromCurrency">From currency</label>
+         <select id="fromCurrency" title="From currency" aria-label="From currency">
             <option value="USD">USD - US Dollar</option>
             <option value="EUR">EUR - Euro</option>
             <option value="GBP">GBP - British Pound</option>
@@ -24,7 +25,8 @@
             <option value="ARS">ARS - Argentine Peso</option>
          </select>
          <span>to</span>
-         <select id="toCurrency">
+         <label for="toCurrency">To currency</label>
+         <select id="toCurrency" title="To currency" aria-label="To currency">
             <option value="USD">USD - US Dollar</option>
             <option value="EUR">EUR - Euro</option>
             <option value="GBP">GBP - British Pound</option>
