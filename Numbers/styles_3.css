@@ -3,6 +3,7 @@ body{
    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
    text-align: center;
    background-image: url(/Clock/assets/boys\ hoodies3.jpg);
+   align-items: center;
 }
 
 #myButton{

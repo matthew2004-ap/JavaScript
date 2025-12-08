@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Monitoring Sheet</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Modern professional styles */
+        
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
@@ -174,8 +173,8 @@
         <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
             <div class="p-6 border-b border-gray-200">
                 <h2 class="text-xl font-semibold text-gray-800">Course Scores</h2>
-                <p class="text-sm text-gray-500 mt-1">Enter your scores below (Test 1: max 20, Test 2: max 20, Exam: max
-                    60)</p>
+                <p class="text-sm text-gray-500 mt-1">Enter your scores below (Test 1: max 15, Test 2: max 15, Exam: max
+                    70)</p>
             </div>
 
             <div class="overflow-x-auto">
@@ -210,14 +209,14 @@
                                 class="group px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200">
                                 <div class="flex items-center gap-2">
                                     <span>Test 1</span>
-                                    <span class="text-indigo-500">(20)</span>
+                                    <span class="text-indigo-500">(15)</span>
                                 </div>
                             </th>
                             <th
                                 class="group px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200">
                                 <div class="flex items-center gap-2">
                                     <span>Test 2</span>
-                                    <span class="text-indigo-500">(20)</span>
+                                    <span class="text-indigo-500">(15)</span>
                                 </div>
                             </th>
                             <th
@@ -277,7 +276,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const courses = [
-                { sn: 1, code: 'GST111A', title: 'Communication in English I', units: 2 },
+                { sn: 1, code: 'TMC112', title: 'Total Man Concept :Sports', units: 0 },
                 { sn: 2, code: 'ITE111', title: 'IT Essentials', units: 0 },
                 { sn: 3, code: 'COS101', title: 'Introduction to Computing Sciences', units: 3 },
                 { sn: 4, code: 'LMU-COS111', title: 'Computer Science and the Society', units: 2 },

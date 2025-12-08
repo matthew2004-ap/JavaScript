@@ -5,7 +5,7 @@ body {
    display: flex;
    align-items: center;
    justify-content: center;
-   background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+   background: url(/Weather/licensed-image.jpeg) no-repeat center center fixed;
    background-size: cover;
    position: relative;
 
@@ -57,7 +57,7 @@ body {
 
 h1 {
    margin-bottom: 1.5rem;
-   color: #2d3a4b;
+   color: rgb(0, 0, 0);
 }
 
 form {
@@ -86,11 +86,11 @@ button {
 }
 
 button:hover {
-   background: #2d3a4b;
+   background: #164583;
 }
 
 #errorDisplay {
-   color: #e74c3c;
+   color: #000000;
    font-weight: bold;
    min-height: 1.2em;
    margin-bottom: 0.7em;
