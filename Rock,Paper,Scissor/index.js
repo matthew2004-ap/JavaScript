@@ -17,7 +17,7 @@ const computerScoreDisplay = document.getElementById("computerScoreDisplay");
 let playerScore = 0;
 let computerScore = 0;
 
-let timeLeft =300; // 3 minutes in seconds
+let timeLeft =30; // 3 minutes in seconds
 let timerInterval = null;
 const timerDisplay = document.getElementById('timer');
 const trophyDisplay = document.getElementById('trophy');
@@ -51,13 +51,13 @@ function endGame() {
     let playerScore = window.playerScore || 0;
     let computerScore = window.computerScore || 0;
     let winnerText = '';
-    if (playerScore > computerScore) {
-        winnerText = "🏆 Player Wins!";
-    } else if (computerScore > playerScore) {
-        winnerText = "🏆 Computer Wins!";
-    } else {
-        winnerText = "🤝 It's a Tie!";
-    }
+   if (playerScore > computerScore) {
+    winnerText = "🏆 Player Wins!";
+} else if (computerScore > playerScore) {
+    winnerText = "🏆 Computer Wins!";
+} else {
+    winnerText = "🤝 It's a Tie!";
+}
     trophyDisplay.style.display = 'block';
     trophyDisplay.textContent = winnerText;
 }
