@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width,initial-scale=1" />
+   <title>Food Time Table</title>
+   <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+   <div class="container">
+      <h1>Food Time Table</h1>
+
+      <div class="controls">
+         <button id="saveBtn">Save</button>
+         <button id="resetBtn">Reset to default</button>
+      </div>
+
+      <div class="now">
+         <div>Current time: <span id="nowTime">--:--:--</span></div>
+         <div>Next meal: <strong id="nextMeal">—</strong> in <span id="countdown">--:--:--</span></div>
+      </div>
+
+      <table id="timetable">
+         <thead>
+            <tr>
+               <th>#</th>
+               <th>Meal</th>
+               <th>Time (HH:MM)</th>
+            </tr>
+         </thead>
+         <tbody></tbody>
+      </table>
+
+      <p class="hint">Times are local. Click a meal name or time to edit; press <code>Save</code> to persist.</p>
+   </div>
+
+   <script src="index.js"></script>
+</body>
+
+</html>
