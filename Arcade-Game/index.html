@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Catch Game</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>🎮 Color Catch Game</h1>
+    <p class="subtitle">Click the matching color tile before time runs out!</p>
+
+    <section class="hud" aria-label="Game stats">
+      <div><strong>Score:</strong> <span id="score">0</span></div>
+      <div><strong>Time:</strong> <span id="time">30</span>s</div>
+      <div><strong>Target:</strong> <span id="targetLabel">-</span></div>
+    </section>
+
+    <button id="startBtn" class="start">Start Game</button>
+
+    <section id="grid" class="grid" aria-label="Color grid"></section>
+
+    <p id="message" class="message" role="status" aria-live="polite"></p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
